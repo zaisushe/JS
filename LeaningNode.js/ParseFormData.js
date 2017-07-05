@@ -1,19 +1,18 @@
-//C:\Users\pxue>curl -X POST -H "Content-Type:application/json" -d '{"Filed1":234,"field2":"abc"}' http://localhost:8080
-
+//C:\Users\pxue>curl -X POST --data "fild1=234&fild2=abc" http://localhost:8080
 var http = require('http');
-
+var qs = require('querystring');
 function handle_request(req,res){
-    var json_data='';
+    var form_data='';
     let output = "";
     req.on(
         "readable",
         ()=>{
             var d = req.read();
             if(typeof d =='string'){
-                json_data +=d;
+                form_data +=d;
             }
             else if(typeof d == 'object' && d instanceof Buffer){
-                json_data+=d.toString('utf8');
+                form_data+=d.toString('utf8');
             }
         }
     );
@@ -21,11 +20,8 @@ function handle_request(req,res){
         "end",
         ()=>{
            
-            if(!json_data || json_data.length==0){
-                output = "I don't have any JSON";
-            }else{
-                output = "I read JSON:"+JSON.stringify(json_data);
-            }
+            var obj = qs.parse(form_data);
+            output = JSON.stringify(obj);
              res.writeHead(200,{
                 'Content-Type':'application/json'
                  })
