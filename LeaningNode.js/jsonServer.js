@@ -1,6 +1,9 @@
 var http = require('http');
+var url = require('url');
 function handleRequest (req,res){
-    console.log(req);
+   // console.log(req);
+    req.parsed_url = url.parse(req.url,true);
+    console.log(req.parsed_url.query.A);
     res.writeHead(200,{
         "Content-Type": "application/json",
     });
